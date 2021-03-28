@@ -1,15 +1,16 @@
 version: "3.9"
 
 services:
-  jenkins:
-    container_name: jenkins-local
-    image: jenkins:2.60.3
-    ports:
-      - "8080:8080"
-      - "50000:50000"
+
+  ansbile:
+    container_name: ansible-local
+    build:
+      context: ./dockerfiles
+      dockerfile: Dockerfile-ansible.app
+
 #  volumes:
 #    jenkins-data:
 #      - jenkins-data:
 
-volumes:
-  jenkins-data:
+#volumes:
+#  ansible-data:
