@@ -39,11 +39,11 @@ pipeline {
             sh "docker rmi $registry:$BUILD_NUMBER"
           }
         }
-//         stage('deploy') {
-//             steps {
-//                 ansiblePlaybook become: true, installation: 'myansible', playbook: 'my_playbook.yml'
-//             }
-//         }
+        stage('deploy') {
+            steps {
+                ansiblePlaybook become: true, installation: 'myansible', playbook: 'aws-playbook.yml'
+            }
+        }
     }
 
 }
