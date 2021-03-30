@@ -1,7 +1,17 @@
-FROM ubuntu:20.04
+FROM alpine:latest
 
-RUN apt update && \
-    DEBIAN_FRONTEND=noninteractive apt install -y default-jdk maven git
+ENV CATALINA_HOME /usr/local/tomcat
+ENV PATH $CATALINA_HOME/bin:$PATH
+RUN mkdir -p $CATALINA_HOME
 
-RUN git clone https://github.com/boxfuse/boxfuse-sample-java-war-hello.git /tmp/boxfuse-sample-java-war-hello && \
-    mvn -f /tmp/boxfuse-sample-java-war-hello/pom.xml package
+RUN apk add openjdk8 && \
+    rm -rf /var/cache/apk/*
+
+RUN wget https://apache-mirror.rbc.ru/pub/apache/tomcat/tomcat-9/v9.0.43/bin/apache-tomcat-9.0.43.tar.gz && \
+    tar xvzf apache-tomcat-9.0.43.tar.gz && \
+    rm apache-tomcat-9.0.43.tar.gz && \
+    mv apache-tomcat-9.0.43/* $CATALINA_HOME
+
+EXPOSE 8080
+WORKDIR $CATALINA_HOME
+CMD ["catalina.sh", "run"]

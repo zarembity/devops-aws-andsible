@@ -1,17 +1,48 @@
 pipeline {
+
+    environment {
+        registry = "gruzii/hellowrld2"
+        dockerImage = ''
+        registryCredential = 'fbb3e1da-574e-414b-baae-5661250feccb'
+    }
+
     agent any
 
     stages {
-        stage('Git clone') {
+
+        stage('git clone') {
             steps {
                 git branch: 'dev', url: 'https://github.com/zarembity/devops-final-homework.git'
             }
         }
 
-        stage('Deploy') {
+        stage('Building image') {
+          steps{
+            script {
+              dockerImage = docker.build registry + ":$BUILD_NUMBER"
+            }
+          }
+        }
+
+        stage('Push image') {
             steps {
-                ansiblePlaybook become: true, installation: 'myansible', playbook: 'my_playbook.yml'
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                    dockerImage.push()
+                }
             }
         }
+
+        stage('Remove Unused docker image') {
+          steps{
+            sh "docker rmi $registry:$BUILD_NUMBER"
+          }
+        }
+//         stage('deploy') {
+//             steps {
+//                 ansiblePlaybook become: true, installation: 'myansible', playbook: 'my_playbook.yml'
+//             }
+//         }
     }
+
 }
