@@ -1,7 +1,9 @@
 ---
 
 - name: Create aws ec2 instances
-  hosts: localhost
+  hosts: localhos
+  become: yes
+  become_user: root
   gather_facts: False
   vars:
     keypair: mego-secret-key4

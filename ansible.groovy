@@ -39,7 +39,8 @@ pipeline {
             sh "docker rmi $registry:$BUILD_NUMBER"
           }
         }
-        stage('deploy') {
+
+        stage('deploy to aws') {
             steps {
                 ansiblePlaybook become: true, installation: 'myansible', playbook: 'aws-playbook.yml'
             }
