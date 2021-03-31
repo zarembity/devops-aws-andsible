@@ -6,7 +6,7 @@
   become_user: root
   gather_facts: False
   vars:
-    keypair: mego-secret-key4
+    keypair: mega-secret-key
     instance_type: t2.micro
     security_group: default
     image: ami-08962a4068733a2b6
@@ -22,18 +22,18 @@
       pip:
         name: boto
 
-#    - name: Create a new EC2 key
-#      ec2_key:
-#        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-#        aws_secret_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
-#        name: "{{ keypair }}"
-#        region: "{{region}}"
-#      register: ec2_key_result
-#
-#    - name: Print EC2 key
-#      debug:
-#        var: ec2_key_result
-#
+    - name: Create a new EC2 key
+      ec2_key:
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
+        name: "{{ keypair }}"
+        region: "{{region}}"
+      register: ec2_key_result
+
+    - name: Print EC2 key
+      debug:
+        var: ec2_key_result
+
 #    - name: create key pair using key_material obtained using 'file' lookup plugin
 #      amazon.aws.ec2_key:
 #        name: my_keypair
