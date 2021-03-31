@@ -56,13 +56,13 @@
         exact_count: 1
       register: output2
 
-#    - name: print
-#      debug:
-#        var: output2
-#    - name: update inventory
-#      add_host:
-#        name: "{{ output2.tagged_instances[0].public_ip }}"
-#        groups: deploygroup
+    - name: print
+      debug:
+        var: output2
+    - name: update inventory
+      add_host:
+        name: "{{ output2.tagged_instances[0].public_ip }}"
+        groups: deploygroup
 
 #- name: Deploy run
 #  hosts: deploygroup
