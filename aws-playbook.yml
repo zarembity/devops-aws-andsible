@@ -37,24 +37,24 @@
       debug:
         var: ec2_key_result
 
-    - name: Launch instance deploy
-      amazon.aws.ec2:
-        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-        aws_secret_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
-        key_name: "{{ keypair }}"
-        group: "{{ security_group }}"
-        instance_type: "{{ instance_type }}"
-        image: "{{ image }}"
-        wait: yes
-        region: "{{ region }}"
-        vpc_subnet_id: "{{vps_subnet}}"
-        assign_public_ip: yes
-        instance_tags:
-          exersise: "homework-finish"
-          Name: deployer-vm
-        count_tag: exersise
-        exact_count: 1
-      register: output2
+#    - name: Launch instance deploy
+#      amazon.aws.ec2:
+#        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+#        aws_secret_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
+#        key_name: "{{ keypair }}"
+#        group: "{{ security_group }}"
+#        instance_type: "{{ instance_type }}"
+#        image: "{{ image }}"
+#        wait: yes
+#        region: "{{ region }}"
+#        vpc_subnet_id: "{{vps_subnet}}"
+#        assign_public_ip: yes
+#        instance_tags:
+#          exersise: "homework-finish"
+#          Name: deployer-vm
+#        count_tag: exersise
+#        exact_count: 1
+#      register: output2
 
 #    - name: print
 #      debug:
