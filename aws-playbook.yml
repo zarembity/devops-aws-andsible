@@ -6,7 +6,7 @@
   become_user: root
   gather_facts: False
   vars:
-    keypair: mega-secret-key
+    keypair: mega-secret-key2
     instance_type: t2.micro
     security_group: default
     image: ami-08962a4068733a2b6
@@ -67,6 +67,7 @@
     - name: print
       debug:
         var: output2
+
     - name: update inventory
       add_host:
         name: "{{ output2.tagged_instances[0].public_ip }}"
