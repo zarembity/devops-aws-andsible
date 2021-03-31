@@ -33,6 +33,14 @@
         region: "{{region}}"
       register: ec2_key_result
 
+    - name: create key pair using key_material obtained using 'file' lookup plugin
+      amazon.aws.ec2_key:
+        name: my_keypair
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
+        region: "{{ region }}"
+        key_material: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
+
     - name: Print EC2 key
       debug:
         var: ec2_key_result
