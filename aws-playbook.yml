@@ -37,33 +37,25 @@
       debug:
         var: ec2_key_result
 
-    - name: create key pair using key_material obtained using 'file' lookup plugin
-      amazon.aws.ec2_key:
-        name: my_keypair
+    - name: Launch instance deploy
+      amazon.aws.ec2:
         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
+        key_name: "{{ keypair }}"
+        group: "{{ security_group }}"
+        instance_type: "{{ instance_type }}"
+        image: "{{ image }}"
+        wait: yes
         region: "{{ region }}"
-        key_material: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
+        vpc_subnet_id: "{{vps_subnet}}"
+        assign_public_ip: yes
+        instance_tags:
+          exersise: "homework-finish"
+          Name: deployer-vm
+        count_tag: exersise
+        exact_count: 1
+      register: output2
 
-#    - name: Launch instance deploy
-#      amazon.aws.ec2:
-#        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-#        aws_secret_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
-#        key_name: "{{ keypair }}"
-#        group: "{{ security_group }}"
-#        instance_type: "{{ instance_type }}"
-#        image: "{{ image }}"
-#        wait: yes
-#        region: "{{ region }}"
-#        vpc_subnet_id: "{{vps_subnet}}"
-#        assign_public_ip: yes
-#        instance_tags:
-#          exersise2: "homework-13-2"
-#          Name: deployer-vm
-#        count_tag: exersise2
-#        exact_count: 1
-#      register: output2
-#
 #    - name: print
 #      debug:
 #        var: output2
