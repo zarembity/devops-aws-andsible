@@ -21,6 +21,9 @@
     - name: Ensure boto python package
       pip:
         name: boto
+    - name: Ensure boto3 python package
+      pip:
+        name: boto3
 
     - name: Create a new EC2 key
       ec2_key:
