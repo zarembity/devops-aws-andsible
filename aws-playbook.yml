@@ -58,8 +58,8 @@
         vpc_subnet_id: "{{vps_subnet}}"
         assign_public_ip: yes
         instance_tags:
-            exersise: "homework-finish"
-            Name: deployer-vm
+          exersise: "homework-finish"
+          Name: deployer-vm
         count_tag: exersise
         exact_count: 1
       register: output2
@@ -83,3 +83,8 @@
     - name: Run the equivalent of "apt-get update" as a separate step
       apt:
         update_cache: yes
+    - name: Start container
+      community.docker.docker_container:
+        name: hello-contener
+        state: present
+        image: gruzii/hellowrld2

@@ -40,6 +40,13 @@ pipeline {
           }
         }
 
+        stage('update ansible') {
+            steps {
+                ssh 'ansible-galaxy collection install community.docker'
+                ssh 'ansible-galaxy collection install amazon.aws'
+            }
+        }
+
         stage('deploy to aws') {
             steps {
                 ansiblePlaybook become: true, installation: 'myansible', playbook: 'aws-playbook.yml'
