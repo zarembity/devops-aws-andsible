@@ -91,8 +91,11 @@
       apt:
         name: docker.io
         state: present
-    - name: Start container
+    - name: Start contener app
       community.docker.docker_container:
         name: hello-contener
+        image: gruzii/hellowrld2:16
         state: present
-        image: gruzii/hellowrld2
+        recreate: yes
+        exposed_ports:
+          - 8080
