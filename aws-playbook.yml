@@ -87,6 +87,10 @@
       apt:
         name: python3-pip
         state: present
+    - name: Ensure docker
+      apt:
+        name: docker.io
+        state: present
     - name: Start container
       community.docker.docker_container:
         name: hello-contener
