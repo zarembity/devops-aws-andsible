@@ -1,0 +1,101 @@
+---
+
+- name: Create aws ec2 instances
+  hosts: localhost
+  become: yes
+  become_user: root
+  gather_facts: False
+  vars:
+    keypair: mega-secret-key2
+    instance_type: t2.micro
+    security_group: default
+    image: ami-08962a4068733a2b6
+    region: us-east-2
+    vps_subnet: subnet-68c8d312
+    mybaket: mybacket10.test7.com
+  tasks:
+    - name: Ensure pip pakage is present
+      apt:
+        name: python3-pip
+        state: present
+    - name: Ensure boto python package
+      pip:
+        name: boto
+    - name: Ensure boto3 python package
+      pip:
+        name: boto3
+
+    - name: Create a new EC2 key
+      ec2_key:
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
+        name: "{{ keypair }}"
+        region: "{{region}}"
+      register: ec2_key_result
+
+    - name: create key pair using key_material obtained using 'file' lookup plugin
+      amazon.aws.ec2_key:
+        name: my_keypair
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
+        region: "{{ region }}"
+        key_material: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
+
+    - name: Print EC2 key
+      debug:
+        var: ec2_key_result
+
+    - name: Launch instance deploy
+      amazon.aws.ec2:
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
+        key_name: "{{ keypair }}"
+        group: "{{ security_group }}"
+        instance_type: "{{ instance_type }}"
+        image: "{{ image }}"
+        wait: yes
+        region: "{{ region }}"
+        vpc_subnet_id: "{{vps_subnet}}"
+        assign_public_ip: yes
+        instance_tags:
+          exersise: "homework-finish"
+          Name: deployer-vm
+        count_tag: exersise
+        exact_count: 1
+      register: output2
+
+    - name: print
+      debug:
+        var: output2
+
+    - name: update inventory
+      add_host:
+        name: "{{ output2.tagged_instances[0].public_ip }}"
+        groups: deploygroup
+
+- name: Deploy run
+  hosts: deploygroup
+  remote_user: ubuntu
+  become: yes
+  become_user: root
+  gather_facts: False
+  tasks:
+    - name: Run the equivalent of "apt-get update" as a separate step
+      apt:
+        update_cache: yes
+    - name: Ensure pip pakage is present
+      apt:
+        name: python3-pip
+        state: present
+    - name: Ensure docker
+      apt:
+        name: docker.io
+        state: present
+    - name: Start contener app
+      community.docker.docker_container:
+        name: hello-contener
+        image: gruzii/hellowrld2:16
+        state: present
+        recreate: yes
+        exposed_ports:
+          - 8080
