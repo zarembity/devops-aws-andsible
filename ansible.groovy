@@ -42,8 +42,8 @@ pipeline {
 
         stage('update ansible') {
             steps {
-                sh 'ansible-galaxy collection install community.docker'
-                sh 'ansible-galaxy collection install amazon.aws'
+                sh "ansible-galaxy collection install community.docker"
+                sh "ansible-galaxy collection install amazon.aws"
             }
         }
 
